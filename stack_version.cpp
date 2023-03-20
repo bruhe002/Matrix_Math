@@ -16,12 +16,12 @@ void multMatrix(int a[ARRAY_SIZE][ARRAY_SIZE], int b[ARRAY_SIZE][ARRAY_SIZE], in
 
 int main() {
     srand(time(NULL));
-    
+
     int matrix1[ARRAY_SIZE][ARRAY_SIZE];
     int matrix2[ARRAY_SIZE][ARRAY_SIZE];
-    int sumMatrix[ARRAY_SIZE][ARRAY_SIZE];
-    int diffMatrix[ARRAY_SIZE][ARRAY_SIZE];
-    int productMatrix[ARRAY_SIZE][ARRAY_SIZE];
+    int sumMatrixResult[ARRAY_SIZE][ARRAY_SIZE];
+    int diffMatrixResult[ARRAY_SIZE][ARRAY_SIZE];
+    int productMatrixResult[ARRAY_SIZE][ARRAY_SIZE];
 
     fillMatrix(matrix1);
     fillMatrix(matrix2);
@@ -33,6 +33,22 @@ int main() {
 
     cout << "Matrix 2" << endl;
     printMatrix(matrix2);
+    cout << endl;
+
+    cout << "Sum Matrix" << endl;
+    addMatrix(matrix1, matrix2, sumMatrixResult);
+    printMatrix(sumMatrixResult);
+    cout << endl;
+
+    cout << "Difference Matrix" << endl;
+    subMatrix(matrix1, matrix2, diffMatrixResult);
+    printMatrix(diffMatrixResult);
+    cout << endl;
+
+    cout << "Product Matrix" << endl;
+    multMatrix(matrix1, matrix2, productMatrixResult);
+    printMatrix(productMatrixResult);
+    cout << endl;
 
     cout << endl;
     system("Pause");
@@ -54,5 +70,31 @@ void printMatrix(int matrix[ARRAY_SIZE][ARRAY_SIZE]) {
         }
 
         cout << endl;
+    }
+}
+
+void addMatrix(int a[ARRAY_SIZE][ARRAY_SIZE], int b[ARRAY_SIZE][ARRAY_SIZE], int c[ARRAY_SIZE][ARRAY_SIZE]) {
+    for(int i = 0; i < ARRAY_SIZE; i++) {
+        for(int j = 0; j < ARRAY_SIZE; j++) {
+            c[i][j] = a[i][j] + b[i][j];
+        }
+    }
+}
+
+void subMatrix(int a[ARRAY_SIZE][ARRAY_SIZE], int b[ARRAY_SIZE][ARRAY_SIZE], int c[ARRAY_SIZE][ARRAY_SIZE]) {
+    for(int i = 0; i < ARRAY_SIZE; i++) {
+        for(int j = 0; j < ARRAY_SIZE; j++) {
+            c[i][j] = a[i][j] - b[i][j];
+        }
+    }
+}
+
+void multMatrix(int a[ARRAY_SIZE][ARRAY_SIZE], int b[ARRAY_SIZE][ARRAY_SIZE], int c[ARRAY_SIZE][ARRAY_SIZE]) {
+    for(int i = 0; i < ARRAY_SIZE; i++) {
+        for(int j = 0; j < ARRAY_SIZE; j++) {
+            for(int k = 0; k < ARRAY_SIZE; k++) {
+                c[i][j] += a[i][k] * b[k][j]; 
+            }
+        }
     }
 }
