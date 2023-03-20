@@ -90,10 +90,13 @@ void subMatrix(int a[ARRAY_SIZE][ARRAY_SIZE], int b[ARRAY_SIZE][ARRAY_SIZE], int
 }
 
 void multMatrix(int a[ARRAY_SIZE][ARRAY_SIZE], int b[ARRAY_SIZE][ARRAY_SIZE], int c[ARRAY_SIZE][ARRAY_SIZE]) {
+    
     for(int i = 0; i < ARRAY_SIZE; i++) {
         for(int j = 0; j < ARRAY_SIZE; j++) {
+            c[i][j] = 0;
             for(int k = 0; k < ARRAY_SIZE; k++) {
-                c[i][j] += a[i][k] * b[k][j]; 
+                int temp = a[i][k] * b[k][j];
+                c[i][j] += temp; 
             }
         }
     }
