@@ -1,6 +1,8 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <iostream>
+
 class Matrix {
     public:
         // Constructor
@@ -23,3 +25,5 @@ class Matrix {
 
 #endif
 
+// Overloaded insertion operator
+ostream& operator<<(ostream &out, const Matrix &m);
