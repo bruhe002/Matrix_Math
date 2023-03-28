@@ -5,11 +5,14 @@
 
 class Matrix {
     public:
+        // Friend Function
+        friend std::ostream& operator<<(std::ostream &out, const Matrix &c);
+
         // Constructor
         Matrix();
         Matrix(int size);
 
-        void setValue(int row, int col, int element);
+        void setElement(int row, int col, int element);
 
         // Overloaded Arithmetic Operation
         Matrix operator+(const Matrix& m);
@@ -32,5 +35,3 @@ class Matrix {
 
 #endif
 
-// Overloaded insertion operator
-ostream& operator<<(ostream &out, const Matrix &m);

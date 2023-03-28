@@ -34,7 +34,7 @@ Matrix::Matrix(int size) {
 
 }
 
-void Matrix::setValue(int row, int col, int element) {
+void Matrix::setElement(int row, int col, int element) {
     *(*(this->values + row) + col) = element;
 }
 
@@ -89,8 +89,8 @@ Matrix Matrix::operator*(const Matrix& m) {
 
 void Matrix::operator=(const Matrix& m) {
     if(this->size == m.size) {
-        for(int i = 0; i < this->size; i++) {
-            for(int j = 0; i < this->size; j++) {
+        for(int i = 0; i < m.size; i++) {
+            for(int j = 0; i < m.size; j++) {
                 *(*(this->values + i) + j) = *(*(m.values + i) + j);
             }
         }
@@ -122,7 +122,12 @@ Matrix::~Matrix() {
 
 }
 
-ostream& operator<<(ostream &out, const Matrix &m) {
-    
+std::ostream & operator<<(std::ostream &out, const Matrix &m) {
+    for(int i = 0; i < m.size; i++) {
+        for(int j = 0; j < m.size; j++) {
+            out << *(*(m.values + i) + j) << " ";
+        }
+        out << std::endl;
+    }
+    return out;
 }
-
