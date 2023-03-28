@@ -2,6 +2,12 @@
     "files.associations": {
         "ostream": "cpp",
         "iostream": "cpp",
-        "iosfwd": "cpp"
-    }
+        "iosfwd": "cpp",
+        "xstring": "cpp",
+        "string": "cpp",
+        "exception": "cpp",
+        "memory": "cpp",
+        "xutility": "cpp"
+    },
+    "cmake.configureOnOpen": false
 }

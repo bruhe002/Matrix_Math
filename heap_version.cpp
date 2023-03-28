@@ -1,93 +1,180 @@
 #include <iostream>
+#include <sstream>
+#include <exception>
 #include <array>
+#include <string>
 #include <stdlib.h>
 #include <ctime>
 
 using namespace std;
 
-const int ARRAY_SIZE = 10;
+bool exitMenuFlag = false;
+bool exitCreateMatrixFlag = true;
 
-void fillMatrix(int** matrix);
-void printMatrix(int** matrix);
+void fillMatrix(float** matrix, int size);
+void printMatrix(float** matrix, int size);
 
-int** addMatrix(int** a, int** b);
-int** subMatrix(int** a, int** b);
-int** multMatrix(int** a, int** b);
+void deleteMatrix(float** matrix, int size);
+
+float** menuFunction(int choice, float** matrix1, float** matrix2, int& size);
+
+float** addMatrix(float** a, float** b, int size);
+float** subMatrix(float** a, float** b, int size);
+float** multMatrix(float** a, float** b, int size);
 
 int main() {
-    srand(time(NULL));
+    cout << "\nWelcome to the MATRIX CALCULATOR" << endl;
+    do {
+        // reset flag
+        exitCreateMatrixFlag = true;
+        exitMenuFlag = false;
+    
+        cout << "\nPlease enter the size of the matrix: ";
+        string garbage;
+        int matrixSize = 0;
+        cin >> matrixSize;
+        getline(cin, garbage);
 
-    // Initialize Matrices
-    int **matrix1 = new int*[ARRAY_SIZE];
-    int **matrix2 = new int*[ARRAY_SIZE];
-    int **sumMatrixResult;
-    int **diffMatrixResult;
-    int **productMatrixResult;
 
-    // Add matix columns
-    for(int i = 0; i < ARRAY_SIZE; i++) {
-        matrix1[i] = new int[ARRAY_SIZE];
-        matrix2[i] = new int[ARRAY_SIZE];
-    }
 
-    fillMatrix(matrix1);
-    fillMatrix(matrix2);
+        // Initialize Matrices
+        float **matrix1 = new float*[matrixSize];
+        float **matrix2 = new float*[matrixSize];
 
-    cout << "Matrix 1" << endl;
-    printMatrix(matrix1);
+        // Add matix columns
+        for(int i = 0; i < matrixSize; i++) {
+            *(matrix1 + i) = new float[matrixSize];
+            *(matrix2 + i) = new float[matrixSize];
+        }
 
-    cout << endl;
+        if(matrixSize < 100) {
+            // Ask user for inputs row by row
+            cout << "\nNow let's enter some values into your FIRST MATRIX:\n" << endl;
+            fillMatrix(matrix1, matrixSize);
 
-    cout << "Matrix 2" << endl;
-    printMatrix(matrix2);
-    cout << endl;
 
-    cout << "Sum Matrix" << endl;
-    sumMatrixResult = addMatrix(matrix1, matrix2);
-    printMatrix(sumMatrixResult);
-    cout << endl;
+            cout << "\nNow let's enter some values into your SECOND MATRIX:\n" << endl;
+            fillMatrix(matrix2, matrixSize);
 
-    cout << "Difference Matrix" << endl;
-    diffMatrixResult = subMatrix(matrix1, matrix2);
-    printMatrix(diffMatrixResult);
-    cout << endl;
+            float **resultingMatrix;
+            // Display Menu
+            do {
+                cout << "Please choose the following: " << endl;
+                cout << "\t1. Add your Matrices" << endl;
+                cout << "\t2. Subtract your Matrices" << endl;
+                cout << "\t3. Multiply your matrices" << endl;
+                cout << "\t4. Change your Matrices" << endl;
+                cout << "\t5. Exit" << endl;
 
-    cout << "Product Matrix" << endl;
-    productMatrixResult = multMatrix(matrix1, matrix2);
-    printMatrix(productMatrixResult);
-    cout << endl;
+                try {
+                    int userChoice = 0;
+                    cin >> userChoice;
+                    if(userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4 && userChoice != 5) {
+                        cout << "Not a valid choice! Please try again!" << endl;
+                    } else {
+                        // cout << "Entering menu Function" << endl;
+                        resultingMatrix = menuFunction(userChoice, matrix1, matrix2, matrixSize);
+                        if(resultingMatrix != nullptr) {
+                            cout << "Result:" << endl;
+                            printMatrix(resultingMatrix, matrixSize);
+                            deleteMatrix(resultingMatrix, matrixSize);
+                        }
+                    }
+                } catch(const exception& e) {
+                    cerr << e.what() << endl;
+                }
 
-    // Deallocate Memory
-    for(int i = 0; i < ARRAY_SIZE; i++) {
-        delete[] matrix1[i];
-        delete[] matrix2[i];
-        delete[] sumMatrixResult[i];
-        delete[] diffMatrixResult[i];
-        delete[] productMatrixResult[i];
-    }
+            } while (!exitMenuFlag);
+        } else {
+            cerr << "The Size needs to be less than 100!" << endl << "Please Try Again!" << endl;
+            exitCreateMatrixFlag = false;
+        }
 
-    delete[] matrix1;
-    delete[] matrix2;
-    delete[] sumMatrixResult;
-    delete[] diffMatrixResult;
-    delete[] productMatrixResult;
+        cout << endl;
+        // Deallocate Memory
+        deleteMatrix(matrix1, matrixSize);
+        deleteMatrix(matrix2, matrixSize);
+        // deleteMatrix(resultingMatrix, matrixSize);
+        
+    } while (!exitCreateMatrixFlag);
 
+    
     cout << endl;
     system("Pause");
     return 0;
 }
 
-void fillMatrix(int** matrix){
-    for(int i = 0; i < ARRAY_SIZE; i++) {
-        for(int j = 0; j < ARRAY_SIZE; j++) {
-            *(*(matrix + i) + j) = rand() % 9 + 1;
+void deleteMatrix(float** matrix, int size) {
+    for(int i = 0; i < size; i++) {
+        delete[] *(matrix + i);
+        *(matrix + i) = nullptr;
+    }
+
+    delete[] matrix;
+    matrix = nullptr;
+}
+
+float** menuFunction(int choice, float** matrix1, float** matrix2, int& size) {
+    switch(choice) {
+        case 1:
+            // cout << "case 1" << endl; 
+            return addMatrix(matrix1, matrix2, size);
+            break;
+        case 2:
+            // cout << "case 2" << endl;
+            return subMatrix(matrix1, matrix2, size);
+            break;
+        case 3:
+            // cout << "case 3" << endl;
+            return multMatrix(matrix1, matrix2, size);
+            break;
+        case 4:
+            // cout << "Case 4" << endl;
+            // deleteMatrix(matrix1, size);
+            // deleteMatrix(matrix2, size);
+            exitCreateMatrixFlag = false;
+            exitMenuFlag = true;
+            return nullptr;
+            break;
+        default:
+            // cout << "Case 5" << endl;
+            exitMenuFlag = true;
+            exitCreateMatrixFlag = true;
+            return nullptr;
+            break;
+    }
+}
+
+void fillMatrix(float** matrix, int size){
+    string row;
+    for(int i = 0; i < size; i++) {
+        cout << "For ROW " << i << ": ";
+        getline(cin, row);
+        cout << endl;
+
+        int elementCounter = 0;
+        string element;
+        stringstream input(row);
+        while(getline(input, element, ' ')) {
+            // If elementCounter Does not exceed the size of the row
+            if(elementCounter < size) {
+                *(*(matrix + i) + elementCounter) = stof(element);
+                elementCounter++;
+            }
+
+        }
+
+        // If the number of elements did not reach the row size
+        // Padd with zeroes
+        for(int j = elementCounter; j < size; j++) {
+            *(*(matrix + i) + j) = 0.0;
         }
     }
 }
 
-void printMatrix(int** matrix) {
-    for(int i = 0; i < ARRAY_SIZE; i++) {
-        for(int j = 0; j < ARRAY_SIZE; j++) {
+void printMatrix(float** matrix, int size) {
+    for(int i = 0; i < size; i++) {
+        for(int j = 0; j < size; j++) {
             cout << *(*(matrix + i) + j) << " ";
         }
 
@@ -95,29 +182,32 @@ void printMatrix(int** matrix) {
     }
 }
 
-int** addMatrix(int** a, int** b) {
-    int** result = new int*[ARRAY_SIZE];
-    for(int i = 0; i < ARRAY_SIZE; i++) {
-        result[i] = new int[ARRAY_SIZE];
+float** addMatrix(float** a, float** b, int size) {
+    float** result = new float*[size];
+    for(int i = 0; i < size; i++) {
+        result[i] = new float[size];
     }
-
-    for(int i = 0; i < ARRAY_SIZE; i++) {
-        for(int j = 0; j < ARRAY_SIZE; j++) {
+    try {
+    for(int i = 0; i < size; i++) {
+        for(int j = 0; j < size; j++) {
             *(*(result + i) + j) = *(*(a + i) + j) + *(*(b + i) + j);
         }
+    }
+    } catch(exception& e) {
+        cerr << e.what() << endl;
     }
 
     return result; 
 }
 
-int** subMatrix(int** a, int** b) {
-    int** result = new int*[ARRAY_SIZE];
-    for(int i = 0; i < ARRAY_SIZE; i++) {
-        result[i] = new int[ARRAY_SIZE];
+float** subMatrix(float** a, float** b, int size) {
+    float** result = new float*[size];
+    for(int i = 0; i < size; i++) {
+        result[i] = new float[size];
     }
 
-    for(int i = 0; i < ARRAY_SIZE; i++) {
-        for(int j = 0; j < ARRAY_SIZE; j++) {
+    for(int i = 0; i < size; i++) {
+        for(int j = 0; j < size; j++) {
             *(*(result + i) + j) = *(*(a + i) + j) - *(*(b + i) + j);
         }
     }
@@ -125,16 +215,19 @@ int** subMatrix(int** a, int** b) {
     return result;
 }
 
-int** multMatrix(int** a, int** b) {
-    int** result = new int*[ARRAY_SIZE];
-    for(int i = 0; i < ARRAY_SIZE; i++) {
-        result[i] = new int[ARRAY_SIZE];
+float** multMatrix(float** a, float** b, int size) {
+    float** result = new float*[size];
+    for(int i = 0; i < size; i++) {
+        result[i] = new float[size];
     }
 
-    for(int i = 0; i < ARRAY_SIZE; i++) {
-        for(int j = 0; j < ARRAY_SIZE; j++) {
-            for(int k = 0; k < ARRAY_SIZE; k++) {
-                *(*(result + i) + j) += *(*(a + k) + j) * *(*(b + i) + k); 
+    for(int i = 0; i < size; i++) {
+        for(int j = 0; j < size; j++) {
+            *(*(result + i) + j) = 0;
+            for(int k = 0; k < size; k++) {
+                float temp2 = *(*(b + k) + j);
+                float temp1 = *(*(a + i) + k);
+                *(*(result + i) + j) = *(*(result + i) + j) + temp1 * temp2; 
             }
         }
     }
