@@ -11,7 +11,7 @@ using namespace std;
 bool exitCreateMatrixFlag = true;
 bool exitMenuFlag = false;
 
-const int MAX_ARRAY_SIZE = 100;
+// const int MAX_ARRAY_SIZE = 100;
 
 void fillMatrix(Matrix& m, int size);
 
@@ -19,7 +19,9 @@ void fillMatrix(Matrix& m, int size);
 
 int main() {
     cout << "\nWelcome to the MATRIX CALCULATOR" << endl;
-
+    float **firstMatrix;
+    float **secondMatrix;
+    float **thirdMatrix;
     // Initialize Matrices
     do {
         exitCreateMatrixFlag = true;
@@ -30,11 +32,23 @@ int main() {
         int matrixSize = 0;
         cin >> matrixSize;
         getline(cin, garbage);
-
+        
         if(matrixSize < MAX_ARRAY_SIZE) {
-            Matrix matrix1(matrixSize);
-            Matrix matrix2(matrixSize);
-            Matrix resultMatrix(matrixSize);
+            cout << "Before the matrix Creation" << endl;
+            firstMatrix = new float*[matrixSize];
+            secondMatrix = new float*[matrixSize];
+            thirdMatrix = new float*[matrixSize];
+            for(int i = 0; i < matrixSize; i++) {
+                *(firstMatrix + i) = new float[matrixSize];
+                *(secondMatrix + i) = new float[matrixSize];
+                *(thirdMatrix + i) = new float[matrixSize];
+            }
+            Matrix matrix1(firstMatrix, matrixSize);
+            Matrix matrix2(secondMatrix, matrixSize);
+            Matrix resultMatrix;
+            
+
+            // cout << matrix1 << endl;
 
             // Ask user for inputs row by row
             cout << "\nNow let's enter some values into your FIRST MATRIX:\n" << endl;
@@ -42,6 +56,10 @@ int main() {
 
             cout << "\nNow let's enter some values into your SECOND MATRIX:\n" << endl;
             fillMatrix(matrix2, matrixSize);
+
+            // Matrix difMatrix = matrix1 - matrix2;
+            // Matrix prodMatrix = matrix1 * matrix2;
+
              // Display Menu
             do {
                 cout << "Please choose the following: " << endl;
@@ -61,12 +79,15 @@ int main() {
                         switch(userChoice) {
                             case 1:
                                 resultMatrix = matrix1 + matrix2;
+                                cout << "\nSum: \n" << resultMatrix << endl;
                                 break;
                             case 2:
                                 resultMatrix = matrix1 - matrix2;
+                                cout << resultMatrix << endl;
                                 break;
                             case 3:
                                 resultMatrix = matrix1 * matrix2;
+                                cout << resultMatrix << endl;
                                 break;
                             case 4:
                                 exitCreateMatrixFlag = false;
@@ -117,13 +138,12 @@ void fillMatrix(Matrix& m, int size) {
                 m.setElement(i, elementCounter, stof(element));
                 elementCounter++;
             }
-
         }
 
         // If the number of elements did not reach the row size
         // Padd with zeroes
         for(int j = elementCounter; j < size; j++) {
-            m.setElement(i, j, stof(element));
+            m.setElement(i, j, 0.0);
         }
     }
 }

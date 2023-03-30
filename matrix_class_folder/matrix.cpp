@@ -6,32 +6,34 @@
 
 using namespace std;
 
-Matrix::Matrix() {
-    this->values = new float*[100];
-    for(int i = 0; i < 100; i++) {
-        *(this->values + i) = new float[100];
-    }
 
-    for(int i = 0; i < 100; i++) {
-        for(int j = 0; j < 100; j++) {
-            *(*(this->values + i) + j) = 0;
-        }
-    } 
+Matrix::Matrix() {
+    this->values = nullptr;
+    this->size = 0;
 }
 
-Matrix::Matrix(int size) {
+Matrix::Matrix(const Matrix& m) {
+    this->values = new float*[m.size];
+    this->size = m.size;
+    for(int i = 0; i < m.size; i++) {
+        *(this->values + i) = new float[m.size];
+        for(int j = 0; j < m.size; j++) {
+            *(*(this->values + i) + j) = *(*(m.values + i) + j);
+        }
+    }
+}
+
+Matrix::Matrix(float **f, int size) {
     this->size = size;
     this->values = new float*[size];
+
+
     for(int i = 0; i < size; i++) {
         *(this->values + i) = new float[size];
-    }
-
-    for(int i = 0; i < size; i++) {
         for(int j = 0; j < size; j++) {
-            *(*(this->values + i) + j) = 0;
+            *(*(this->values + i) + j) = *(*(f + i) + j);
         }
-    } 
-
+    }
 }
 
 void Matrix::setElement(int row, int col, int element) {
@@ -39,21 +41,33 @@ void Matrix::setElement(int row, int col, int element) {
 }
 
 Matrix Matrix::operator+(const Matrix& m) {
-    Matrix result(this->size);
+    // TRY RETURNING THE OVERLOADED CONSTRUCTOR
+    // SEE IF THAT WORKS
     
     if(this->size == m.size) {
+        float **f = new float*[this->size];
         for(int i = 0; i < this->size; i++) {
-            for(int j = 0; i < this->size; j++) {
-                *(*(result.values + i) + j) = *(*(this->values + i) + j) + *(*(m.values + i) + j);
+            *(f + i) = new float[this->size];
+            for(int j = 0; j < this->size; j++) {
+                *(*(f + i) + j) = *(*(this->values + i) + j) + *(*(m.values + i) + j);
             }
         }
+        Matrix result(f, this->size);
+        
+        for(int i = 0; i < this->size; i++) {
+            delete[] *(f + i);
+        }
+
+        delete[] f;
+        return result;
+    } else {
+        throw 20;
     }
 
-    return result;
 }
 
 Matrix Matrix::operator-(const Matrix& m) {
-    Matrix result(this->size);
+    Matrix result;
     
     if(this->size == m.size) {
         for(int i = 0; i < this->size; i++) {
@@ -67,7 +81,7 @@ Matrix Matrix::operator-(const Matrix& m) {
 }
 
 Matrix Matrix::operator*(const Matrix& m) {
-    Matrix result(this->size);
+    Matrix result;
     
     if(this->size == m.size) {
         for(int i = 0; i < this->size; i++) {
@@ -88,12 +102,29 @@ Matrix Matrix::operator*(const Matrix& m) {
 }
 
 void Matrix::operator=(const Matrix& m) {
+    // cout << "Assignment operator" << endl;
+    if(this->values != nullptr) {
+        this->~Matrix();
+    }
+    
+    this->values = new float*[m.size];
+    this->size = m.size;
     if(this->size == m.size) {
         for(int i = 0; i < m.size; i++) {
-            for(int j = 0; i < m.size; j++) {
+            *(this->values + i) = new float[m.size];
+            for(int j = 0; j < m.size; j++) {
                 *(*(this->values + i) + j) = *(*(m.values + i) + j);
             }
         }
+        // for(int i = 0; i < this->size; i++) {
+        //     delete[] *(this->values + i);
+        //     // *(this->values + i) = nullptr;
+        // }
+
+        // delete[] this->values;
+        // // this->values = nullptr;
+
+        // this->values = m.values;
     } else {
         throw 20;
     }
@@ -112,13 +143,14 @@ int Matrix::getSize() {
 }
 
 Matrix::~Matrix() {
+    // cout << "Destructor called" << endl;
     for(int i = 0; i < this->size; i++) {
         delete[] *(this->values + i);
-        *(this->values + i) = nullptr;
+        // *(this->values + i) = nullptr;
     }
 
     delete[] this->values;
-    this->values = nullptr;
+    // this->values = nullptr;
 
 }
 

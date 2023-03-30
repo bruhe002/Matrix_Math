@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+const int MAX_ARRAY_SIZE = 100;
+
 class Matrix {
     public:
         // Friend Function
@@ -10,7 +12,8 @@ class Matrix {
 
         // Constructor
         Matrix();
-        Matrix(int size);
+        Matrix(const Matrix& m);
+        Matrix(float **f, int size);
 
         void setElement(int row, int col, int element);
 
