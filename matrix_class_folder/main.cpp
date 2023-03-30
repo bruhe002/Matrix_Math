@@ -83,11 +83,11 @@ int main() {
                                 break;
                             case 2:
                                 resultMatrix = matrix1 - matrix2;
-                                cout << resultMatrix << endl;
+                                cout << "\nDifference: \n" << resultMatrix << endl;
                                 break;
                             case 3:
                                 resultMatrix = matrix1 * matrix2;
-                                cout << resultMatrix << endl;
+                                cout << "\nProduct: \n" << resultMatrix << endl;
                                 break;
                             case 4:
                                 exitCreateMatrixFlag = false;

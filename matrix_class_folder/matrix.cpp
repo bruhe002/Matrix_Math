@@ -27,7 +27,6 @@ Matrix::Matrix(float **f, int size) {
     this->size = size;
     this->values = new float*[size];
 
-
     for(int i = 0; i < size; i++) {
         *(this->values + i) = new float[size];
         for(int j = 0; j < size; j++) {
@@ -41,9 +40,6 @@ void Matrix::setElement(int row, int col, int element) {
 }
 
 Matrix Matrix::operator+(const Matrix& m) {
-    // TRY RETURNING THE OVERLOADED CONSTRUCTOR
-    // SEE IF THAT WORKS
-    
     if(this->size == m.size) {
         float **f = new float*[this->size];
         for(int i = 0; i < this->size; i++) {
@@ -67,38 +63,55 @@ Matrix Matrix::operator+(const Matrix& m) {
 }
 
 Matrix Matrix::operator-(const Matrix& m) {
-    Matrix result;
-    
     if(this->size == m.size) {
+        float **f = new float*[this->size];
         for(int i = 0; i < this->size; i++) {
-            for(int j = 0; i < this->size; j++) {
-                *(*(result.values + i) + j) = *(*(this->values + i) + j) - *(*(m.values + i) + j);
+            *(f + i) = new float[this->size];
+            for(int j = 0; j < this->size; j++) {
+                *(*(f + i) + j) = *(*(this->values + i) + j) - *(*(m.values + i) + j);
             }
         }
-    }
-
-    return result;
-}
-
-Matrix Matrix::operator*(const Matrix& m) {
-    Matrix result;
-    
-    if(this->size == m.size) {
+        Matrix result(f, this->size);
+        
         for(int i = 0; i < this->size; i++) {
-            for(int j = 0; i < this->size; j++) {
-                for(int k = 0; k < this->size; k++) {
-                    int temp1 = *(*(this->values + i) + k);
-                    int temp2 = *(*(m.values + k) + j);
-                    *(*(result.values + i) + j) +=  temp1 * temp2;
-                }
-                
-            }
+            delete[] *(f + i);
         }
+
+        delete[] f;
+        return result;
     } else {
         throw 20;
     }
 
-    return result;
+}
+
+Matrix Matrix::operator*(const Matrix& m) {
+    if(this->size == m.size) {
+        float **f = new float*[this->size];
+        for(int i = 0; i < this->size; i++) {
+            *(f + i) = new float[this->size];
+            for(int j = 0; j < this->size; j++) {
+                *(*(f + i) + j) = 0.0;
+                for(int k = 0; k < this->size; k++) {
+                    float temp1 = *(*(this->values + i) + k);
+                    float temp2 = *(*(m.values + k) + j);
+                    *(*(f + i) + j) += temp1 * temp2;
+                }
+                
+            }
+        }
+        Matrix result(f, this->size);
+        
+        for(int i = 0; i < this->size; i++) {
+            delete[] *(f + i);
+        }
+
+        delete[] f;
+        return result;
+    } else {
+        throw 20;
+    }
+
 }
 
 void Matrix::operator=(const Matrix& m) {
