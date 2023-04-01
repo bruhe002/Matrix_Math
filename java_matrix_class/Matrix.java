@@ -20,6 +20,18 @@ public class Matrix {
         }
     }
 
+    public int getCol() {
+        return this.col;
+    }
+
+    public int getRow() {
+        return this.row;
+    }
+
+    public void setElement(int row, int col, int element) {
+        this.matrix[row][col] = element;
+    }
+
     public Matrix addMatrix(Matrix m) throws Exception {
         if (this.row == m.row && this.col == m.col) {
             Matrix result = new Matrix(this.row, this.col);
@@ -57,7 +69,10 @@ public class Matrix {
             Matrix result = new Matrix(this.row, m.col);
             for(int i = 0; i < this.row; i++) {
                 for(int j = 0; j < m.col; j++) {
-                    result.matrix[i][j] = this.matrix[i][j] - m.matrix[i][j];
+                    for(int k = 0; k < this.col; k++) {
+                        result.matrix[i][j] *= this.matrix[i][k] * m.matrix[k][j];
+                    }
+
                 }
             }
 
