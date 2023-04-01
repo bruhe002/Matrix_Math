@@ -144,7 +144,7 @@ void fillMatrix(Matrix& m, int row, int col) {
 
         int elementCounter = 0;
         string element;
-        stringstream input(row);
+        stringstream input(rowValues);
         while(getline(input, element, ' ')) {
             // If elementCounter Does not exceed the size of the row
             if(elementCounter < col) {
