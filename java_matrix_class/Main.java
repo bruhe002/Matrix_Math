@@ -24,6 +24,33 @@ public class Main {
         }
     }
 
+    private static void randomMatrix(Matrix m, int matrixSize) {
+        Random rand = new Random(System.currentTimeMillis());
+        for(int i = 0; i < matrixSize; i++) {
+            for(int j = 0; j < matrixSize; j++) {
+                m.setElement(i, j, rand.nextFloat());
+            }
+        }
+    }
+
+    private static void measureMultiplication() throws Exception {
+        System.out.print("Please Enter a matrix size (The Matrices will be square): ");
+        Scanner anotherOne = new Scanner(System.in);
+        String input = anotherOne.nextLine();
+        int matrixSize = Integer.parseInt(input);
+        Matrix m1 = new Matrix(matrixSize, matrixSize);
+        Matrix m2 = new Matrix(matrixSize, matrixSize);
+
+        randomMatrix(m1, matrixSize);
+        randomMatrix(m2, matrixSize);
+        System.out.println("Measuring Multiplication...");
+        long start = System.nanoTime();
+        Matrix result = m1.multiplyMatrix(m2);
+        long end = System.nanoTime();
+        System.out.println("Programmed ran for " + (end - start) + "ns");
+
+    }
+
     public static void main(String[] args) {
         System.out.println("Welcome to the MATRIX CALCULATOR!");
         String input;
@@ -66,13 +93,14 @@ public class Main {
                         System.out.println("\t2. Subtract Matrices");
                         System.out.println("\t3. Multiply Matrices");
                         System.out.println("\t4. Change Matrices");
-                        System.out.println("\t5. Quit");
+                        System.out.println("\t5. Measure Multiplication");
+                        System.out.println("\t6. Quit");
 
                         input = menuInput.nextLine();
                         int choice = Integer.parseInt(input);
 //                        menuInput.nextLine();
                         Matrix resultMatrix;
-                        if(choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5) {
+                        if(choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6) {
                             throw new Exception("Not a valid Option! Please Try again!");
                         } else {
                             switch (choice) {
@@ -96,6 +124,9 @@ public class Main {
                                     exitMenu = true;
                                     break;
                                 case 5:
+                                    measureMultiplication();
+                                    break;
+                                case 6:
                                     exitMenu = true;
                                     remakeMatrix = false;
                                     break;

@@ -3,10 +3,12 @@
 #include <exception>
 #include <array>
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
 #include <ctime>
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 const int MAX_ARRAY_SIZE = 100;
 
@@ -16,7 +18,7 @@ bool exitCreateMatrixFlag = true;
 void fillMatrix(float** matrix, int row, int col);
 void printMatrix(float** matrix, int row, int col);
 
-void deleteMatrix(float** matrix, int row, int col);
+void deleteMatrix(float** matrix, int row);
 
 float** menuFunction(int choice, float** matrix1, float** matrix2, int firstRow, int firstCol, int secondRow, int secondCol);
 
@@ -24,8 +26,12 @@ float** addMatrix(float** a, float** b, int firstRow, int firstCol, int secondRo
 float** subMatrix(float** a, float** b, int firstRow, int firstCol, int secondRow, int secondCol);
 float** multMatrix(float** a, float** b, int firstRow, int firstCol, int secondRow, int secondCol);
 
+void randomMatrix(float m[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int size);
+void measureMultiplication();
+
 int main() {
     cout << "\nWelcome to the MATRIX CALCULATOR" << endl;
+    srand(time(NULL));
     do {
         // reset flag
         exitCreateMatrixFlag = true;
@@ -82,12 +88,13 @@ int main() {
                 cout << "\t2. Subtract your Matrices" << endl;
                 cout << "\t3. Multiply your matrices" << endl;
                 cout << "\t4. Change your Matrices" << endl;
-                cout << "\t5. Exit" << endl;
+                cout << "\t5. Measure Multiplication" << endl;
+                cout << "\t6. Exit" << endl;
 
                 try {
                     int userChoice = 0;
                     cin >> userChoice;
-                    if(userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4 && userChoice != 5) {
+                    if(userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4 && userChoice != 5 && userChoice != 6) {
                         cout << "Not a valid choice! Please try again!" << endl;
                     } else {
                         // cout << "Entering menu Function" << endl;
@@ -95,8 +102,13 @@ int main() {
                         if(resultingMatrix != nullptr) {
                             cout << "Result:" << endl;
                             printMatrix(resultingMatrix, firstRow, secondCol);
-                            deleteMatrix(resultingMatrix, firstRow, secondCol);
+                            deleteMatrix(resultingMatrix, firstRow);
                         }
+                    }
+                } catch (int x) {
+                    if(x == 20) {
+                        cerr << "ERROR 20: Rows and Columns are NOT consistent with operation" << endl;
+                        exitMenuFlag = false;
                     }
                 } catch(const exception& e) {
                     cerr << e.what() << endl;
@@ -110,8 +122,8 @@ int main() {
 
         cout << endl;
         // Deallocate Memory
-        deleteMatrix(matrix1, firstRow, firstCol);
-        deleteMatrix(matrix2, secondRow, secondCol);
+        deleteMatrix(matrix1, firstRow);
+        deleteMatrix(matrix2, secondRow);
         // deleteMatrix(resultingMatrix, matrixSize);
         
     } while (!exitCreateMatrixFlag);
@@ -122,8 +134,8 @@ int main() {
     return 0;
 }
 
-void deleteMatrix(float** matrix, int size) {
-    for(int i = 0; i < size; i++) {
+void deleteMatrix(float** matrix, int row) {
+    for(int i = 0; i < row; i++) {
         delete[] *(matrix + i);
         *(matrix + i) = nullptr;
     }
@@ -150,6 +162,9 @@ float** menuFunction(int choice, float** matrix1, float** matrix2, int firstRow,
             exitCreateMatrixFlag = false;
             exitMenuFlag = true;
             return nullptr;
+            break;
+        case 5:
+            measureMultiplication();
             break;
         default:
             // cout << "Case 5" << endl;
@@ -251,5 +266,45 @@ float** multMatrix(float** a, float** b, int firstRow, int firstCol, int secondR
     } else {
         throw 20;
     }
+    
+}
+
+float** randomMatrix(int size) {
+    float** matrix = new float*[size];
+    for(int i = 0; i < size; i++) {
+        *(matrix + i) = new float[size];
+        for(int j = 0; j < size; j++) {
+            *(*(matrix + i) + j) = float(rand() % 9);
+        }
+    }
+
+    return matrix;
+}
+
+void measureMultiplication() {
+    cout << "Please enter in a matrix size (The Matrices will be square): ";
+    int matrixSize = 0;
+    cin >> matrixSize;
+    string garbage;
+    getline(cin, garbage);
+
+    float** matrix1 = randomMatrix(matrixSize);
+    float** matrix2 = randomMatrix(matrixSize);
+
+    cout << "Multiplying matrices..." << endl;
+    auto start = high_resolution_clock::now();
+    try {
+        float** result = multMatrix(matrix1, matrix2, matrixSize, matrixSize, matrixSize, matrixSize);
+        auto end = high_resolution_clock::now();
+
+        auto duration = duration_cast<nanoseconds>(end - start);
+        cout << "TIME OF COMPLETION: " <<  duration.count() << "ns" << endl;
+        deleteMatrix(result, matrixSize);
+    } catch (const exception& e) {
+        cerr << "ERROR: " << e.what() << endl;
+    }
+    
+    deleteMatrix(matrix1, matrixSize);
+    deleteMatrix(matrix2, matrixSize);
     
 }

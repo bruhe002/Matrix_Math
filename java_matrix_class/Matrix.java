@@ -28,7 +28,7 @@ public class Matrix {
         return this.row;
     }
 
-    public void setElement(int row, int col, int element) {
+    public void setElement(int row, int col, float element) {
         this.matrix[row][col] = element;
     }
 

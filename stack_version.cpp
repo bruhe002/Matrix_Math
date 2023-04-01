@@ -4,8 +4,11 @@
 #include <array>
 #include <string>
 #include <stdlib.h>
+#include <ctime>
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 const int MAX_ARRAY_SIZE = 100;
 
@@ -24,8 +27,12 @@ void subMatrix(float a[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], float b[MAX_ARRAY_SIZE][
 void multMatrix(float a[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], float b[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], float c[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], 
                 int firstRow, int firstCol, int secondRow, int secondCol);
 
+void randomMatrix(float m[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int size);
+void measureMultiplication();
+
 int main() {
     cout << "\nWelcome to the MATRIX CALCULATOR" << endl;
+    srand(time(NULL));
     // Initialize Matrices
     float matrix1[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE];
     float matrix2[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE];
@@ -72,12 +79,13 @@ int main() {
                 cout << "\t2. Subtract your Matrices" << endl;
                 cout << "\t3. Multiply your matrices" << endl;
                 cout << "\t4. Change your Matrices" << endl;
-                cout << "\t5. Exit" << endl;
+                cout << "\t5. Measure Multiplication" << endl;
+                cout << "\t6. Exit" << endl;
 
                 try {
                     int userChoice = 0;
                     cin >> userChoice;
-                    if(userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4 && userChoice != 5) {
+                    if(userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4 && userChoice != 5 && userChoice != 6) {
                         cout << "Not a valid choice! Please try again!" << endl;
                     } else {
                         // cout << "Entering menu Function" << endl;
@@ -86,6 +94,11 @@ int main() {
                             cout << "Result:" << endl;
                             printMatrix(resultingMatrix, firstRow, secondCol);
                         }
+                    }
+                } catch (int x) {
+                    if(x == 20) {
+                        cerr << "ERROR 20: Rows and Columns are NOT consistent with operation" << endl;
+                        exitMenuFlag = false;
                     }
                 } catch(const exception& e) {
                     cerr << e.what() << endl;
@@ -127,6 +140,9 @@ void menuFunction(int choice, float matrix1[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], flo
             exitCreateMatrixFlag = false;
             exitMenuFlag = true;
             break;
+        case 5:
+            measureMultiplication();
+            break;    
         default:
             exitMenuFlag = true;
             exitCreateMatrixFlag = true;
@@ -212,4 +228,39 @@ void multMatrix(float a[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], float b[MAX_ARRAY_SIZE]
         }
     }
 
+}
+
+
+void randomMatrix(float m[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int size) {
+    for(int i = 0; i < size; i++) {
+        for(int j = 0; j < size; j++) {
+            m[i][j] = float(rand() % 9);
+        }
+    }
+}
+
+void measureMultiplication() {
+    cout << "Please enter in a matrix size (The Matrices will be square): ";
+    int matrixSize = 0;
+    cin >> matrixSize;
+    string garbage;
+    getline(cin, garbage);
+
+    float matrix1[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE];
+    float matrix2[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE];
+    float result[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE];
+
+    cout << "Multiplying matrices..." << endl;
+    auto start = high_resolution_clock::now();
+    try {
+        multMatrix(matrix1, matrix2, result, matrixSize, matrixSize, matrixSize, matrixSize);
+        auto end = high_resolution_clock::now();
+
+        auto duration = duration_cast<nanoseconds>(end - start);
+        cout << "TIME OF COMPLETION: " <<  duration.count() << "ns" << endl;
+    } catch (const exception& e) {
+        cerr << "ERROR: " << e.what() << endl;
+    }
+    
+    
 }

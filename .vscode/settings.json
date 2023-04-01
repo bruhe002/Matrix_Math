@@ -8,7 +8,8 @@
         "exception": "cpp",
         "memory": "cpp",
         "xutility": "cpp",
-        "xlocale": "cpp"
+        "xlocale": "cpp",
+        "chrono": "cpp"
     },
     "cmake.configureOnOpen": false
 }

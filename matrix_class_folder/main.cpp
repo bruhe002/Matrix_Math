@@ -3,10 +3,13 @@
 #include <exception>
 #include <string>
 #include <stdlib.h>
+#include <ctime>
+#include <chrono>
 
 #include "matrix.h"
 
 using namespace std;
+using namespace std::chrono;
 
 bool exitCreateMatrixFlag = true;
 bool exitMenuFlag = false;
@@ -15,9 +18,13 @@ bool exitMenuFlag = false;
 
 void fillMatrix(Matrix& m, int row, int col);
 
+float** randomMatrix(int size);
+void measureMultiplication();
+
 // void menuFunction(int choice, const Matrix& m1, const Matrix& m2, const Matrix& m3);
 
 int main() {
+    srand(time(NULL));
     cout << "\nWelcome to the MATRIX CALCULATOR" << endl;
     float **firstMatrix;
     float **secondMatrix;
@@ -80,12 +87,13 @@ int main() {
                 cout << "\t2. Subtract your Matrices" << endl;
                 cout << "\t3. Multiply your matrices" << endl;
                 cout << "\t4. Change your Matrices" << endl;
-                cout << "\t5. Exit" << endl;
+                cout << "\t5. Change your Matrices" << endl;
+                cout << "\t6. Exit" << endl;
 
                 try {
                     int userChoice = 0;
                     cin >> userChoice;
-                    if(userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4 && userChoice != 5) {
+                    if(userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4 && userChoice != 5 && userChoice != 6) {
                         cout << "Not a valid choice! Please try again!" << endl;
                     } else {
                         // cout << "Entering menu Function" << endl;
@@ -107,6 +115,9 @@ int main() {
                                 exitMenuFlag = true;
                                 break;
                             case 5:
+                                measureMultiplication();
+                                break;    
+                            case 6:
                                 exitCreateMatrixFlag = true;
                                 exitMenuFlag = true;
                                 break;
@@ -161,7 +172,40 @@ void fillMatrix(Matrix& m, int row, int col) {
     }
 }
 
-// void menuFunction(int choice, const Matrix& m1, const Matrix& m2, const Matrix& m3) {
+float** randomMatrix(int size) {
+    float** matrix = new float*[size];
+    for(int i = 0; i < size; i++) {
+        *(matrix + i) = new float[size];
+        for(int j = 0; j < size; j++) {
+            *(*(matrix + i) + j) = float(rand() % 9);
+        }
+    }
 
-// }
+    return matrix;
+}
+
+void measureMultiplication() {
+    cout << "Please enter in a matrix size (The Matrices will be square): ";
+    int matrixSize = 0;
+    cin >> matrixSize;
+    string garbage;
+    getline(cin, garbage);
+
+    Matrix matrix1(randomMatrix(matrixSize), matrixSize, matrixSize);
+    Matrix matrix2(randomMatrix(matrixSize), matrixSize, matrixSize);
+
+    cout << "Multiplying matrices..." << endl;
+    auto start = high_resolution_clock::now();
+    try {
+        Matrix result = matrix1 * matrix2;
+        auto end = high_resolution_clock::now();
+
+        auto duration = duration_cast<nanoseconds>(end - start);
+        cout << "TIME OF COMPLETION: " <<  duration.count() << "ns" << endl;
+    } catch (const exception& e) {
+        cerr << "ERROR: " << e.what() << endl;
+    }
+    
+    
+}
 
