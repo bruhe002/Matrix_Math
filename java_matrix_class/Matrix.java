@@ -70,7 +70,7 @@ public class Matrix {
             for(int i = 0; i < this.row; i++) {
                 for(int j = 0; j < m.col; j++) {
                     for(int k = 0; k < this.col; k++) {
-                        result.matrix[i][j] *= this.matrix[i][k] * m.matrix[k][j];
+                        result.matrix[i][j] += this.matrix[i][k] * m.matrix[k][j];
                     }
 
                 }

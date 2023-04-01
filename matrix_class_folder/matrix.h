@@ -13,7 +13,7 @@ class Matrix {
         // Constructor
         Matrix();
         Matrix(const Matrix& m);
-        Matrix(float **f, int size);
+        Matrix(float **f, int row, int col);
 
         void setElement(int row, int col, int element);
 
@@ -26,14 +26,16 @@ class Matrix {
         // Get Function
         float getElement(int, int);
         float** getValues();
-        int getSize();
+        int getRow();
+        int getCol();
 
         // Destructor
         ~Matrix();
 
     private:
         float **values;
-        int size;
+        int row;
+        int col;
 };
 
 #endif

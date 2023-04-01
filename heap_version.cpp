@@ -8,19 +8,21 @@
 
 using namespace std;
 
+const int MAX_ARRAY_SIZE = 100;
+
 bool exitMenuFlag = false;
 bool exitCreateMatrixFlag = true;
 
-void fillMatrix(float** matrix, int size);
-void printMatrix(float** matrix, int size);
+void fillMatrix(float** matrix, int row, int col);
+void printMatrix(float** matrix, int row, int col);
 
-void deleteMatrix(float** matrix, int size);
+void deleteMatrix(float** matrix, int row, int col);
 
-float** menuFunction(int choice, float** matrix1, float** matrix2, int& size);
+float** menuFunction(int choice, float** matrix1, float** matrix2, int firstRow, int firstCol, int secondRow, int secondCol);
 
-float** addMatrix(float** a, float** b, int size);
-float** subMatrix(float** a, float** b, int size);
-float** multMatrix(float** a, float** b, int size);
+float** addMatrix(float** a, float** b, int firstRow, int firstCol, int secondRow, int secondCol);
+float** subMatrix(float** a, float** b, int firstRow, int firstCol, int secondRow, int secondCol);
+float** multMatrix(float** a, float** b, int firstRow, int firstCol, int secondRow, int secondCol);
 
 int main() {
     cout << "\nWelcome to the MATRIX CALCULATOR" << endl;
@@ -29,32 +31,48 @@ int main() {
         exitCreateMatrixFlag = true;
         exitMenuFlag = false;
     
-        cout << "\nPlease enter the size of the matrix: ";
+        cout << "\nPlease enter the # of ROWS for the FIRST MATRIX: ";
         string garbage;
-        int matrixSize = 0;
-        cin >> matrixSize;
+        int firstRow = 0;
+        cin >> firstRow;
         getline(cin, garbage);
 
+        cout << "\nPlease enter the # of COLUMNS for the FIRST MATRIX: ";
+        int firstCol = 0;
+        cin >> firstCol;
+        getline(cin, garbage);
 
+        cout << "\nPlease enter the # of ROWS for the SECOND MATRIX: ";
+        int secondRow = 0;
+        cin >> secondRow;
+        getline(cin, garbage);
+
+        cout << "\nPlease enter the # of COLUMNS for the SECOND MATRIX: ";
+        int secondCol = 0;
+        cin >> secondCol;
+        getline(cin, garbage);
 
         // Initialize Matrices
-        float **matrix1 = new float*[matrixSize];
-        float **matrix2 = new float*[matrixSize];
+            float **matrix1 = new float*[firstRow];
+            float **matrix2 = new float*[secondRow];
 
-        // Add matix columns
-        for(int i = 0; i < matrixSize; i++) {
-            *(matrix1 + i) = new float[matrixSize];
-            *(matrix2 + i) = new float[matrixSize];
-        }
+            // Add matix columns
+            for(int i = 0; i < firstRow; i++) {
+                *(matrix1 + i) = new float[firstCol];
+            }
 
-        if(matrixSize < 100) {
+            for(int i = 0; i < secondRow; i++) {
+                *(matrix2 + i) = new float[secondCol];
+            }
+
+        if(firstRow < MAX_ARRAY_SIZE && firstCol < MAX_ARRAY_SIZE && secondRow < MAX_ARRAY_SIZE && secondCol < MAX_ARRAY_SIZE) {
             // Ask user for inputs row by row
             cout << "\nNow let's enter some values into your FIRST MATRIX:\n" << endl;
-            fillMatrix(matrix1, matrixSize);
+            fillMatrix(matrix1, firstRow, firstCol);
 
 
             cout << "\nNow let's enter some values into your SECOND MATRIX:\n" << endl;
-            fillMatrix(matrix2, matrixSize);
+            fillMatrix(matrix2, secondRow, secondCol);
 
             float **resultingMatrix;
             // Display Menu
@@ -73,11 +91,11 @@ int main() {
                         cout << "Not a valid choice! Please try again!" << endl;
                     } else {
                         // cout << "Entering menu Function" << endl;
-                        resultingMatrix = menuFunction(userChoice, matrix1, matrix2, matrixSize);
+                        resultingMatrix = menuFunction(userChoice, matrix1, matrix2, firstRow, firstCol, secondRow, secondCol);
                         if(resultingMatrix != nullptr) {
                             cout << "Result:" << endl;
-                            printMatrix(resultingMatrix, matrixSize);
-                            deleteMatrix(resultingMatrix, matrixSize);
+                            printMatrix(resultingMatrix, firstRow, secondCol);
+                            deleteMatrix(resultingMatrix, firstRow, secondCol);
                         }
                     }
                 } catch(const exception& e) {
@@ -92,8 +110,8 @@ int main() {
 
         cout << endl;
         // Deallocate Memory
-        deleteMatrix(matrix1, matrixSize);
-        deleteMatrix(matrix2, matrixSize);
+        deleteMatrix(matrix1, firstRow, firstCol);
+        deleteMatrix(matrix2, secondRow, secondCol);
         // deleteMatrix(resultingMatrix, matrixSize);
         
     } while (!exitCreateMatrixFlag);
@@ -114,24 +132,21 @@ void deleteMatrix(float** matrix, int size) {
     matrix = nullptr;
 }
 
-float** menuFunction(int choice, float** matrix1, float** matrix2, int& size) {
+float** menuFunction(int choice, float** matrix1, float** matrix2, int firstRow, int firstCol, int secondRow, int secondCol) {
     switch(choice) {
         case 1:
             // cout << "case 1" << endl; 
-            return addMatrix(matrix1, matrix2, size);
+            return addMatrix(matrix1, matrix2, firstRow, firstCol, secondRow, secondCol);
             break;
         case 2:
             // cout << "case 2" << endl;
-            return subMatrix(matrix1, matrix2, size);
+            return subMatrix(matrix1, matrix2, firstRow, firstCol, secondRow, secondCol);
             break;
         case 3:
             // cout << "case 3" << endl;
-            return multMatrix(matrix1, matrix2, size);
+            return multMatrix(matrix1, matrix2, firstRow, firstCol, secondRow, secondCol);
             break;
         case 4:
-            // cout << "Case 4" << endl;
-            // deleteMatrix(matrix1, size);
-            // deleteMatrix(matrix2, size);
             exitCreateMatrixFlag = false;
             exitMenuFlag = true;
             return nullptr;
@@ -145,19 +160,19 @@ float** menuFunction(int choice, float** matrix1, float** matrix2, int& size) {
     }
 }
 
-void fillMatrix(float** matrix, int size){
-    string row;
-    for(int i = 0; i < size; i++) {
+void fillMatrix(float** matrix, int row, int col){
+    string rowElements;
+    for(int i = 0; i < row; i++) {
         cout << "For ROW " << i << ": ";
-        getline(cin, row);
+        getline(cin, rowElements);
         cout << endl;
 
         int elementCounter = 0;
         string element;
-        stringstream input(row);
+        stringstream input(rowElements);
         while(getline(input, element, ' ')) {
             // If elementCounter Does not exceed the size of the row
-            if(elementCounter < size) {
+            if(elementCounter < col) {
                 *(*(matrix + i) + elementCounter) = stof(element);
                 elementCounter++;
             }
@@ -166,15 +181,15 @@ void fillMatrix(float** matrix, int size){
 
         // If the number of elements did not reach the row size
         // Padd with zeroes
-        for(int j = elementCounter; j < size; j++) {
+        for(int j = elementCounter; j < col; j++) {
             *(*(matrix + i) + j) = 0.0;
         }
     }
 }
 
-void printMatrix(float** matrix, int size) {
-    for(int i = 0; i < size; i++) {
-        for(int j = 0; j < size; j++) {
+void printMatrix(float** matrix, int row, int col) {
+    for(int i = 0; i < row; i++) {
+        for(int j = 0; j < col; j++) {
             cout << *(*(matrix + i) + j) << " ";
         }
 
@@ -182,55 +197,59 @@ void printMatrix(float** matrix, int size) {
     }
 }
 
-float** addMatrix(float** a, float** b, int size) {
-    float** result = new float*[size];
-    for(int i = 0; i < size; i++) {
-        result[i] = new float[size];
-    }
-    try {
-    for(int i = 0; i < size; i++) {
-        for(int j = 0; j < size; j++) {
-            *(*(result + i) + j) = *(*(a + i) + j) + *(*(b + i) + j);
-        }
-    }
-    } catch(exception& e) {
-        cerr << e.what() << endl;
-    }
-
-    return result; 
-}
-
-float** subMatrix(float** a, float** b, int size) {
-    float** result = new float*[size];
-    for(int i = 0; i < size; i++) {
-        result[i] = new float[size];
-    }
-
-    for(int i = 0; i < size; i++) {
-        for(int j = 0; j < size; j++) {
-            *(*(result + i) + j) = *(*(a + i) + j) - *(*(b + i) + j);
-        }
-    }
-
-    return result;
-}
-
-float** multMatrix(float** a, float** b, int size) {
-    float** result = new float*[size];
-    for(int i = 0; i < size; i++) {
-        result[i] = new float[size];
-    }
-
-    for(int i = 0; i < size; i++) {
-        for(int j = 0; j < size; j++) {
-            *(*(result + i) + j) = 0;
-            for(int k = 0; k < size; k++) {
-                float temp2 = *(*(b + k) + j);
-                float temp1 = *(*(a + i) + k);
-                *(*(result + i) + j) = *(*(result + i) + j) + temp1 * temp2; 
+float** addMatrix(float** a, float** b, int firstRow, int firstCol, int secondRow, int secondCol) {
+    if(firstRow == secondRow && firstCol == secondCol) {
+        float** result = new float*[firstRow];
+        for(int i = 0; i < firstRow; i++) {
+            result[i] = new float[firstCol];
+            for(int j = 0; j < firstCol; j++) {
+                    *(*(result + i) + j) = *(*(a + i) + j) + *(*(b + i) + j);
             }
         }
-    }
+        return result; 
 
-    return result;
+    } else {
+        throw 20;
+    }
+}
+
+float** subMatrix(float** a, float** b, int size, int firstRow, int firstCol, int secondRow, int secondCol) {
+    if(firstRow == secondRow && firstCol == secondCol) {
+        float** result = new float*[firstRow];
+        for(int i = 0; i < firstRow; i++) {
+            result[i] = new float[firstCol];
+            for(int j = 0; j < firstCol; j++) {
+                    *(*(result + i) + j) = *(*(a + i) + j) - *(*(b + i) + j);
+            }
+        }
+        return result; 
+
+    } else {
+        throw 20;
+    }
+}
+
+float** multMatrix(float** a, float** b, int firstRow, int firstCol, int secondRow, int secondCol) {
+    if(firstCol == secondRow) {
+        float** result = new float*[firstRow];
+        for(int i = 0; i < firstRow; i++) {
+            result[i] = new float[secondCol];
+        }
+
+        for(int i = 0; i < firstRow; i++) {
+            for(int j = 0; j < secondCol; j++) {
+                *(*(result + i) + j) = 0;
+                for(int k = 0; k < firstCol; k++) {
+                    float temp2 = *(*(b + k) + j);
+                    float temp1 = *(*(a + i) + k);
+                    *(*(result + i) + j) = *(*(result + i) + j) + temp1 * temp2; 
+                }
+            }
+        }
+
+        return result;
+    } else {
+        throw 20;
+    }
+    
 }

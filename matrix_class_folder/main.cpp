@@ -13,7 +13,7 @@ bool exitMenuFlag = false;
 
 // const int MAX_ARRAY_SIZE = 100;
 
-void fillMatrix(Matrix& m, int size);
+void fillMatrix(Matrix& m, int row, int col);
 
 // void menuFunction(int choice, const Matrix& m1, const Matrix& m2, const Matrix& m3);
 
@@ -27,35 +27,48 @@ int main() {
         exitCreateMatrixFlag = true;
         exitMenuFlag = false;
 
-        cout << "\nPlease enter the size of the matrix: ";
+        cout << "\nPlease enter the # of ROWS for the FIRST MATRIX: ";
         string garbage;
-        int matrixSize = 0;
-        cin >> matrixSize;
+        int firstRow = 0;
+        cin >> firstRow;
         getline(cin, garbage);
-        
-        if(matrixSize < MAX_ARRAY_SIZE) {
-            cout << "Before the matrix Creation" << endl;
-            firstMatrix = new float*[matrixSize];
-            secondMatrix = new float*[matrixSize];
-            thirdMatrix = new float*[matrixSize];
-            for(int i = 0; i < matrixSize; i++) {
-                *(firstMatrix + i) = new float[matrixSize];
-                *(secondMatrix + i) = new float[matrixSize];
-                *(thirdMatrix + i) = new float[matrixSize];
-            }
-            Matrix matrix1(firstMatrix, matrixSize);
-            Matrix matrix2(secondMatrix, matrixSize);
-            Matrix resultMatrix;
-            
 
-            // cout << matrix1 << endl;
+        cout << "\nPlease enter the # of COLUMNS for the FIRST MATRIX: ";
+        int firstCol = 0;
+        cin >> firstCol;
+        getline(cin, garbage);
+
+        cout << "\nPlease enter the # of ROWS for the SECOND MATRIX: ";
+        int secondRow = 0;
+        cin >> secondRow;
+        getline(cin, garbage);
+
+        cout << "\nPlease enter the # of COLUMNS for the SECOND MATRIX: ";
+        int secondCol = 0;
+        cin >> secondCol;
+        getline(cin, garbage);
+
+        if(firstRow < MAX_ARRAY_SIZE && firstCol < MAX_ARRAY_SIZE && secondRow < MAX_ARRAY_SIZE && secondCol < MAX_ARRAY_SIZE) {
+            firstMatrix = new float*[firstRow];
+            for(int i = 0; i < firstRow; i++) {
+                *(firstMatrix + i) = new float[firstCol];
+            }
+            Matrix matrix1(firstMatrix, firstRow, firstCol);
+
+            secondMatrix = new float*[secondRow];
+            for(int i = 0; i < secondRow; i++) {
+                *(secondMatrix + i) = new float[secondCol];
+            }
+            Matrix matrix2(secondMatrix, secondRow, secondCol);
+
+            Matrix resultMatrix;
 
             // Ask user for inputs row by row
             cout << "\nNow let's enter some values into your FIRST MATRIX:\n" << endl;
-            fillMatrix(matrix1, matrixSize);
+            fillMatrix(matrix1, firstRow, firstCol);
 
             cout << "\nNow let's enter some values into your SECOND MATRIX:\n" << endl;
-            fillMatrix(matrix2, matrixSize);
+            fillMatrix(matrix2, secondRow, secondCol);
 
             // Matrix difMatrix = matrix1 - matrix2;
             // Matrix prodMatrix = matrix1 * matrix2;
@@ -122,11 +135,11 @@ int main() {
     return 0;
 }
 
-void fillMatrix(Matrix& m, int size) {
-    string row;
-    for(int i = 0; i < size; i++) {
+void fillMatrix(Matrix& m, int row, int col) {
+    string rowValues;
+    for(int i = 0; i < row; i++) {
         cout << "For ROW " << i << ": ";
-        getline(cin, row);
+        getline(cin, rowValues);
         cout << endl;
 
         int elementCounter = 0;
@@ -134,7 +147,7 @@ void fillMatrix(Matrix& m, int size) {
         stringstream input(row);
         while(getline(input, element, ' ')) {
             // If elementCounter Does not exceed the size of the row
-            if(elementCounter < size) {
+            if(elementCounter < col) {
                 m.setElement(i, elementCounter, stof(element));
                 elementCounter++;
             }
@@ -142,7 +155,7 @@ void fillMatrix(Matrix& m, int size) {
 
         // If the number of elements did not reach the row size
         // Padd with zeroes
-        for(int j = elementCounter; j < size; j++) {
+        for(int j = elementCounter; j < col; j++) {
             m.setElement(i, j, 0.0);
         }
     }
