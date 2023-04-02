@@ -121,6 +121,7 @@ int main() {
         }
 
         cout << endl;
+        
         // Deallocate Memory
         deleteMatrix(matrix1, firstRow);
         deleteMatrix(matrix2, secondRow);
@@ -224,7 +225,7 @@ float** addMatrix(float** a, float** b, int firstRow, int firstCol, int secondRo
         return result; 
 
     } else {
-        throw 20;
+        throw 20; // Throw error code if sizes don't match
     }
 }
 
@@ -240,7 +241,7 @@ float** subMatrix(float** a, float** b, int firstRow, int firstCol, int secondRo
         return result; 
 
     } else {
-        throw 20;
+        throw 20; // Throw error code if sizes don't match
     }
 }
 
@@ -264,7 +265,7 @@ float** multMatrix(float** a, float** b, int firstRow, int firstCol, int secondR
 
         return result;
     } else {
-        throw 20;
+        throw 20; // Throw error code if sizes don't match
     }
     
 }

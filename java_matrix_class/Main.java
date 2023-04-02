@@ -1,9 +1,11 @@
 import java.util.*;
 
 public class Main {
+    // Global loop Flags
     static boolean exitMenu = false;
     static boolean remakeMatrix = true;
 
+    // Asks user to input values row by row
     public static void fillMatrix(Matrix m) {
         Scanner elementInput = new Scanner(System.in);
         System.out.println("\nNow Enter the values of of each row (separate with spaces)!");
@@ -24,6 +26,8 @@ public class Main {
         }
     }
 
+
+    // Will fill a matrix with random values
     private static void randomMatrix(Matrix m, int matrixSize) {
         Random rand = new Random(System.currentTimeMillis());
         for(int i = 0; i < matrixSize; i++) {
@@ -33,6 +37,7 @@ public class Main {
         }
     }
 
+    // Measures the matrix multiplication function via
     private static void measureMultiplication() throws Exception {
         System.out.print("Please Enter a matrix size (The Matrices will be square): ");
         Scanner anotherOne = new Scanner(System.in);
@@ -56,6 +61,7 @@ public class Main {
         String input;
         do {
             try {
+                // Asks for values
                 System.out.println("Let's build the FIRST MATRIX!");
                 Scanner matrixInput = new Scanner(System.in);
 
@@ -69,6 +75,7 @@ public class Main {
                 int firstCol = Integer.parseInt(input);
 //                matrixInput.nextLine();
 
+                // Fill matrix
                 Matrix matrix1 = new Matrix(firstRow, firstCol);
                 fillMatrix(matrix1);
 
@@ -82,11 +89,13 @@ public class Main {
                 int secondCol = matrixInput.nextInt();
                 matrixInput.nextLine();
 
+                // Fill Matrix
                 Matrix matrix2 = new Matrix(secondRow, secondCol);
                 fillMatrix(matrix2);
 
                 do {
                     try {
+                        // Display Menu
                         Scanner menuInput = new Scanner(System.in);
                         System.out.println("Please Select the Following:");
                         System.out.println("\t1. Add Matrices");
@@ -104,29 +113,31 @@ public class Main {
                             throw new Exception("Not a valid Option! Please Try again!");
                         } else {
                             switch (choice) {
-                                case 1:
+                                case 1: // Add
                                     resultMatrix = matrix1.addMatrix(matrix2);
                                     System.out.println("\nSum:");
                                     resultMatrix.printMatrix();
                                     break;
-                                case 2:
+                                case 2: // Subtract
                                     resultMatrix = matrix1.subMatrix(matrix2);
                                     System.out.println("\nDifference:");
                                     resultMatrix.printMatrix();
                                     break;
-                                case 3:
+                                case 3: // Multiply
                                     resultMatrix = matrix1.multiplyMatrix(matrix2);
                                     System.out.println("\nProduct:");
                                     resultMatrix.printMatrix();
                                     break;
                                 case 4:
+                                    // Set flags to only break out of inner loop
                                     remakeMatrix = true;
                                     exitMenu = true;
                                     break;
-                                case 5:
+                                case 5: // Measure multiplication
                                     measureMultiplication();
                                     break;
                                 case 6:
+                                    // Set flags to break out of all loops
                                     exitMenu = true;
                                     remakeMatrix = false;
                                     break;

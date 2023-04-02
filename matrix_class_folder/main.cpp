@@ -14,14 +14,10 @@ using namespace std::chrono;
 bool exitCreateMatrixFlag = true;
 bool exitMenuFlag = false;
 
-// const int MAX_ARRAY_SIZE = 100;
-
 void fillMatrix(Matrix& m, int row, int col);
 
 float** randomMatrix(int size);
 void measureMultiplication();
-
-// void menuFunction(int choice, const Matrix& m1, const Matrix& m2, const Matrix& m3);
 
 int main() {
     srand(time(NULL));
@@ -29,11 +25,13 @@ int main() {
     float **firstMatrix;
     float **secondMatrix;
     float **thirdMatrix;
+
     // Initialize Matrices
     do {
         exitCreateMatrixFlag = true;
         exitMenuFlag = false;
 
+        // Ask users for rows and columns
         cout << "\nPlease enter the # of ROWS for the FIRST MATRIX: ";
         string garbage;
         int firstRow = 0;
@@ -55,7 +53,9 @@ int main() {
         cin >> secondCol;
         getline(cin, garbage);
 
+        // Size check each row and column
         if(firstRow < MAX_ARRAY_SIZE && firstCol < MAX_ARRAY_SIZE && secondRow < MAX_ARRAY_SIZE && secondCol < MAX_ARRAY_SIZE) {
+            // Initialize Matrices
             firstMatrix = new float*[firstRow];
             for(int i = 0; i < firstRow; i++) {
                 *(firstMatrix + i) = new float[firstCol];
@@ -172,6 +172,8 @@ void fillMatrix(Matrix& m, int row, int col) {
     }
 }
 
+
+// Randomly Fill up a matrix with numbers
 float** randomMatrix(int size) {
     float** matrix = new float*[size];
     for(int i = 0; i < size; i++) {
@@ -184,6 +186,7 @@ float** randomMatrix(int size) {
     return matrix;
 }
 
+// Measure Multiplication Function Execution Time
 void measureMultiplication() {
     cout << "Please enter in a matrix size (The Matrices will be square): ";
     int matrixSize = 0;

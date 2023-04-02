@@ -6,7 +6,7 @@
 
 using namespace std;
 
-
+// Default Constructor
 Matrix::Matrix() {
     this->values = nullptr;
     this->row = 0;
@@ -14,6 +14,7 @@ Matrix::Matrix() {
 
 }
 
+// Copy Constructor
 Matrix::Matrix(const Matrix& m) {
     this->values = new float*[m.row];
     this->row = m.row;
@@ -26,6 +27,7 @@ Matrix::Matrix(const Matrix& m) {
     }
 }
 
+// Overloaded Constructor
 Matrix::Matrix(float **f, int row, int col) {
     this->row = row;
     this->col = col;
@@ -39,10 +41,13 @@ Matrix::Matrix(float **f, int row, int col) {
     }
 }
 
+// Set Element function
 void Matrix::setElement(int row, int col, int element) {
     *(*(this->values + row) + col) = element;
 }
 
+
+// Overloaded + Operator
 Matrix Matrix::operator+(const Matrix& m) {
     if(this->row == m.row && this->col == m.col) {
         float **f = new float*[this->row];
@@ -66,6 +71,8 @@ Matrix Matrix::operator+(const Matrix& m) {
 
 }
 
+
+// Overloaded - Operator
 Matrix Matrix::operator-(const Matrix& m) {
 if(this->row == m.row && this->col == m.col) {
         float **f = new float*[this->row];
@@ -89,6 +96,7 @@ if(this->row == m.row && this->col == m.col) {
 
 }
 
+// Overloaded * Operator
 Matrix Matrix::operator*(const Matrix& m) {
     if(this->col == m.row) {
         float **f = new float*[this->row];
@@ -118,6 +126,8 @@ Matrix Matrix::operator*(const Matrix& m) {
 
 }
 
+
+// Overloaded = Operator
 void Matrix::operator=(const Matrix& m) {
     // cout << "Assignment operator" << endl;
     if(this->values != nullptr) {
@@ -137,6 +147,7 @@ void Matrix::operator=(const Matrix& m) {
 
 }
 
+// Get functions
 float Matrix::getElement(int row, int col) {
     return *(*(this->values + row) + col);
 }
@@ -153,18 +164,18 @@ int Matrix::getCol() {
     return this->col;
 }
 
+// Destructor
 Matrix::~Matrix() {
     // cout << "Destructor called" << endl;
     for(int i = 0; i < this->row; i++) {
         delete[] *(this->values + i);
-        // *(this->values + i) = nullptr;
     }
 
     delete[] this->values;
-    // this->values = nullptr;
-
 }
 
+
+// Overloaded << operator, declared as a friend function
 std::ostream & operator<<(std::ostream &out, const Matrix &m) {
     for(int i = 0; i < m.row; i++) {
         for(int j = 0; j < m.col; j++) {
