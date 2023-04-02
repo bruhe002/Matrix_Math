@@ -87,7 +87,7 @@ int main() {
                 cout << "\t2. Subtract your Matrices" << endl;
                 cout << "\t3. Multiply your matrices" << endl;
                 cout << "\t4. Change your Matrices" << endl;
-                cout << "\t5. Change your Matrices" << endl;
+                cout << "\t5. Measure Multiplication" << endl;
                 cout << "\t6. Exit" << endl;
 
                 try {
@@ -194,14 +194,14 @@ void measureMultiplication() {
     Matrix matrix1(randomMatrix(matrixSize), matrixSize, matrixSize);
     Matrix matrix2(randomMatrix(matrixSize), matrixSize, matrixSize);
 
-    cout << "Multiplying matrices..." << endl;
+    cout << "Multiplying matrices...\n" << endl;
     auto start = high_resolution_clock::now();
     try {
         Matrix result = matrix1 * matrix2;
         auto end = high_resolution_clock::now();
 
         auto duration = duration_cast<nanoseconds>(end - start);
-        cout << "TIME OF COMPLETION: " <<  duration.count() << "ns" << endl;
+        cout << "\nTIME OF COMPLETION: " <<  duration.count() << "ns\n" << endl;
     } catch (const exception& e) {
         cerr << "ERROR: " << e.what() << endl;
     }

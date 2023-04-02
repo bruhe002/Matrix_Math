@@ -43,11 +43,11 @@ public class Main {
 
         randomMatrix(m1, matrixSize);
         randomMatrix(m2, matrixSize);
-        System.out.println("Measuring Multiplication...");
+        System.out.println("Measuring Multiplication...\n");
         long start = System.nanoTime();
         Matrix result = m1.multiplyMatrix(m2);
         long end = System.nanoTime();
-        System.out.println("Programmed ran for " + (end - start) + "ns");
+        System.out.println("\nProgrammed ran for " + (end - start) + "ns\n");
 
     }
 

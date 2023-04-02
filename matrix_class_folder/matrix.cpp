@@ -72,7 +72,7 @@ if(this->row == m.row && this->col == m.col) {
         for(int i = 0; i < this->row; i++) {
             *(f + i) = new float[this->col];
             for(int j = 0; j < this->col; j++) {
-                *(*(f + i) + j) = *(*(this->values + i) + j) + *(*(m.values + i) + j);
+                *(*(f + i) + j) = *(*(this->values + i) + j) - *(*(m.values + i) + j);
             }
         }
         Matrix result(f, this->row, this->col);

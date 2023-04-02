@@ -99,7 +99,7 @@ int main() {
                     } else {
                         // cout << "Entering menu Function" << endl;
                         resultingMatrix = menuFunction(userChoice, matrix1, matrix2, firstRow, firstCol, secondRow, secondCol);
-                        if(resultingMatrix != nullptr) {
+                        if(userChoice != 5 && userChoice != 6) {
                             cout << "Result:" << endl;
                             printMatrix(resultingMatrix, firstRow, secondCol);
                             deleteMatrix(resultingMatrix, firstRow);
@@ -228,7 +228,7 @@ float** addMatrix(float** a, float** b, int firstRow, int firstCol, int secondRo
     }
 }
 
-float** subMatrix(float** a, float** b, int size, int firstRow, int firstCol, int secondRow, int secondCol) {
+float** subMatrix(float** a, float** b, int firstRow, int firstCol, int secondRow, int secondCol) {
     if(firstRow == secondRow && firstCol == secondCol) {
         float** result = new float*[firstRow];
         for(int i = 0; i < firstRow; i++) {
@@ -291,14 +291,14 @@ void measureMultiplication() {
     float** matrix1 = randomMatrix(matrixSize);
     float** matrix2 = randomMatrix(matrixSize);
 
-    cout << "Multiplying matrices..." << endl;
+    cout << "Multiplying matrices...\n" << endl;
     auto start = high_resolution_clock::now();
     try {
         float** result = multMatrix(matrix1, matrix2, matrixSize, matrixSize, matrixSize, matrixSize);
         auto end = high_resolution_clock::now();
 
         auto duration = duration_cast<nanoseconds>(end - start);
-        cout << "TIME OF COMPLETION: " <<  duration.count() << "ns" << endl;
+        cout << "\nTIME OF COMPLETION: " <<  duration.count() << "ns\n" << endl;
         deleteMatrix(result, matrixSize);
     } catch (const exception& e) {
         cerr << "ERROR: " << e.what() << endl;
